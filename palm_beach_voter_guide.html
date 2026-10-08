@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palm Beach County Voter Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base & Background - Responsive Frame */
+        html, body { margin: 0; padding: 0; width: 100%; height: auto; overflow-x: hidden; background-color: #f4f6f8; font-family: 'Noto Sans', 'Noto Serif', Helvetica, Arial, sans-serif; color: #1a1a1a; line-height: 1.5; box-sizing: border-box; scroll-behavior: smooth; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .search-container { position: sticky; top: 0; z-index: 100; margin-bottom: 20px; padding-top: 10px; background-color: #f4f6f8; }
+        .search-icon { position: absolute; left: 16px; top: calc(50% + 5px); transform: translateY(-50%); width: 20px; height: 20px; fill: #888; pointer-events: none; }
+        #searchInput { width: 100%; padding: 16px 20px 16px 48px; font-size: 16px; font-family: inherit; border: 1px solid #e0e0e0; border-radius: 12px; box-sizing: border-box; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.2s ease; outline: none; background-color: #fff; }
+        #searchInput:focus { border-color: #a0a0a0; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .section-title { font-size: 1.1em; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1.2px; margin: 40px 0 15px 5px; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; font-family: 'Noto Sans', sans-serif; }
+        .race-container { background: #ffffff; border-radius: 12px; padding: 25px 30px; margin-bottom: 20px; border: 1px solid #eaeaea; box-shadow: 0 2px 8px rgba(0,0,0,0.02), 0 8px 24px rgba(0,0,0,0.04); }
+        .race-title { font-size: 1.4em; margin: 0 0 15px 0; font-weight: 700; color: #111; line-height: 1.3; font-family: 'Noto Serif', serif; }
+        .party-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 15px 0 10px 0; font-family: 'Noto Sans', sans-serif; }
+        .badge-rep { background: rgba(232, 27, 35, 0.1); color: #e81b23; border: 1px solid rgba(232, 27, 35, 0.3); }
+        .badge-dem { background: rgba(0, 174, 243, 0.1); color: #008cc4; border: 1px solid rgba(0, 174, 243, 0.3); }
+        .badge-non { background: #f0f0f0; color: #555; margin-bottom: 10px; border: 1px solid #ccc; }
+        .candidate-list { list-style-type: none; padding: 0; margin: 0 0 10px 0; font-family: 'Noto Sans', sans-serif; }
+        .candidate-list li { padding: 10px 12px; background: #fafafa; border-radius: 6px; margin-bottom: 6px; font-size: 1em; color: #333; border: 1px solid #f0f0f0; }
+        .candidate-list li:last-child { margin-bottom: 0; }
+        
+        
+        .btn-group { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn { 
+            display: inline-flex; align-items: center; padding: 6px 12px; 
+            text-decoration: none; border-radius: 6px; font-size: 0.75em; 
+            font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); transition: all 0.2s ease;
+            background: #ffffff; color: #444; border: 1px solid #ccc;
+        }
+        .btn:hover {
+            transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            background: #f4f4f4; border-color: #999; color: #111;
+        }
+        
+        /* TOC Dropdown Styles */
+        details.toc-dropdown { background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: all 0.2s ease; }
+        details.toc-dropdown[open] { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        details.toc-dropdown summary { font-weight: 700; font-family: 'Noto Sans', sans-serif; padding: 16px 20px; cursor: pointer; color: #333; font-size: 1.05em; list-style: none; position: relative; outline: none; }
+        details.toc-dropdown summary::-webkit-details-marker { display: none; }
+        details.toc-dropdown summary::after { content: "▼"; position: absolute; right: 20px; font-size: 0.8em; color: #888; transform: translateY(2px) rotate(0deg); transition: transform 0.2s ease; }
+        details.toc-dropdown[open] summary::after { transform: translateY(2px) rotate(180deg); }
+        .toc-content { padding: 0 20px 20px 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+        .toc-content a { color: #0066cc; text-decoration: none; font-family: 'Noto Sans', sans-serif; font-size: 0.95em; display: block; padding: 4px 0; }
+        .toc-content a:hover { text-decoration: underline; color: #004499; }
+        
+        /* Back to top styles */
+        .back-to-top-container { text-align: right; margin-top: -5px; margin-bottom: 25px; }
+        .back-to-top { display: inline-block; font-size: 0.85em; color: #888; text-decoration: none; font-family: 'Noto Sans', sans-serif; transition: color 0.2s ease; }
+        .back-to-top:hover { color: #333; text-decoration: underline; }
+        
+        @media (max-width: 600px) {
+            .container { padding: 15px; } .race-container { padding: 20px; } .toc-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="search-container">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search for a race or candidate">
+    </div>
+    
+    <!-- TOC Generation -->
+    <div id="toc-container" style="margin-bottom: 40px;">
+        <h3 style="margin-top: 0; font-family: 'Noto Sans', sans-serif; font-size: 1.1em; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; margin-left: 5px;">Jump to Section</h3>
+        <details class="toc-dropdown">
+            <summary>Federal & Statewide Races</summary>
+            <div class="toc-content">
+                <a href="#federal-statewide-races-federal-offices">Federal Offices</a>
+                <a href="#federal-statewide-races-statewide-offices">Statewide Offices</a>
+                <a href="#federal-statewide-races-federal-offices">Federal Offices</a>
+                <a href="#federal-statewide-races-judicial-retention">Judicial Retention</a>
+                <a href="#federal-statewide-races-constitutional-amendments">Constitutional Amendments</a>
+            </div>
+        </details>
+        <details class="toc-dropdown">
+            <summary>State Legislature</summary>
+            <div class="toc-content">
+                <a href="#state-legislature-state-senate">State Senate</a>
+                <a href="#state-legislature-state-house">State House</a>
+            </div>
+        </details>
+        <details class="toc-dropdown">
+            <summary>County and municipal races</summary>
+            <div class="toc-content">
+                <a href="#palm-beach-county-races-palm-beach-county">Palm Beach County</a>
+                <a href="#palm-beach-county-races-port-of-palm-beach">Port of Palm Beach</a>
+                <a href="#palm-beach-county-races-school-board">School Board</a>
+                <a href="#palm-beach-county-races-palm-beach-soil-and-water-conservation-district">Palm Beach Soil and Water Conservation District</a>
+                <a href="#palm-beach-county-races-indian-trail-improvement-district">Indian Trail Improvement District</a>
+                <a href="#palm-beach-county-races-avenir-community-development-district">Avenir Community Development District</a>
+                <a href="#palm-beach-county-races-palm-beach-county">Palm Beach County</a>
+            </div>
+        </details>
+    </div>
+
+    <div id="ballot-content">
+        <h2 class="section-title">Federal & Statewide Races</h2>
+        <h3 id="federal-statewide-races-federal-offices" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Federal Offices</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">U.S. Senator</h4>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Ashley Moody</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Angie Nixon</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Neil J. Gillespie (NPA)</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="federal-statewide-races-statewide-offices" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Statewide Offices</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Governor and Lieutenant Governor</h4>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Byron Donalds / Bryan Avila</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>David Jolly / Gwen Graham</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Scott Eckhard Jewett / Nicole Skelly (LPF)</li>
+                <li>Charles Burkett / Ruben A. Coto (NPA)</li>
+                <li>Frank J. Russo / Rachel Rodriguez (NPA)</li>
+                <li>Moliere "Moe" Dimanche / Benjiman Rojas (NPA)</li>
+                <li>Dean Ocean Abrams / Joe Van Vactor (NPA)</li>
+                <li>Jeffrey Peter "Dr. Jeff" Datto / Juan Santana (NPA)</li>
+                <li>Write-in option (write-in)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Attorney General</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/12/for-attorney-general-jose-javier-rodr%CE%AFguez-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>James Uthmeier</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Jose Javier Rodriguez</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Chief Financial Officer</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/04/for-the-cabinet-annette-taddeo-joey-atkins-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Blaise Ingoglia</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Annette Taddeo</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Commissioner of Agriculture</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/04/for-the-cabinet-annette-taddeo-joey-atkins-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Wilton Simpson (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Joey Mendoza Atkins</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Write-in option (write-in)</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="federal-statewide-races-federal-offices" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Federal Offices</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Representative in Congress, District 21</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach, Martin, St. Lucie</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Brian Mast</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>James T. Martin</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Alexander Cooke (NPA)</li>
+                <li>Write-in option (write-in)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Representative in Congress, District 22</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/18/two-for-congress-wasserman-schultz-dandiya-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Broward, Palm Beach, Hendry, Collier</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Casey Askar</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Pia Dandiya</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Representative in Congress, District 23</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Deborah Adeimy</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Lois Frankel</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Representative in Congress, District 25</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/24/for-u-s-congress-keep-jared-moskowitz-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Broward, Palm Beach, Miami-Dade</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Scott Singer</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Jared Moskowitz</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Peter Jassenoff (LPF)</li>
+                <li>Write-in option (write-in)</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="federal-statewide-races-judicial-retention" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Judicial Retention</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Justice of the Supreme Court</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/28/its-only-fair-to-retire-this-florida-justice-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="margin: 0; color: #333;">Shall Justice Carlos G. Muñiz of the Supreme Court be retained in office?</p>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Fourth District Court of Appeal</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Shall Judge Alan O. Forst of the Fourth District Court of Appeal be retained in office?</li>
+                <li>Shall Judge Mark W. Klingensmith of the Fourth District Court of Appeal be retained in office?</li>
+                <li>Shall Judge Johnathan D. Lott of the Fourth District Court of Appeal be retained in office?</li>
+                <li>Shall Judge Shannon K. Shaw of the Fourth District Court of Appeal be retained in office?</li>
+                <li>Shall Judge Caroline Cahill Shepherd of the Fourth District Court of Appeal be retained in office?</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="federal-statewide-races-constitutional-amendments" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Constitutional Amendments</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">No. 1 Constitutional Amendment</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/30/just-say-no-to-all-three-state-amendments-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">Budget Stabilization Fund</p>
+            <p style="margin: 0; color: #333;">Proposing an amendment to the State Constitution to increase the amount of funds that may be retained in the budget stabilization fund from 10% to 25% of general revenue collections, require the legislature to transfer the lesser of $750 million or the amount required to reach 25% of the general revenue collections each year unless certain conditions are met, and allow the legislature to withdraw funds for critical state needs.</p>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">No. 2 Constitutional Amendment</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/30/just-say-no-to-all-three-state-amendments-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">Exemption of Tangible Personal Property on Agricultural Land from Taxation</p>
+            <p style="margin: 0; color: #333;">Proposing an amendment to the State Constitution to exempt tangible personal property habitually located or typically present on land classified as agricultural, used in the production of agricultural products or for agritourism activities, and owned by the landowner or leaseholder of the agricultural land from ad valorem taxation. If approved this amendment would first apply for tax years beginning January 1, 2027.</p>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">No. 3 Constitutional Amendment</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/19/no-no-no-on-awful-amendment-3-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">Increased Homestead Exemption; Lower Cap on Increases in Non-Homestead Property Assessments</p>
+            <p style="margin: 0; color: #333;">This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027.</p>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h2 class="section-title">State Legislature</h2>
+        <h3 id="state-legislature-state-senate" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">State Senate</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Senator, District 24</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Jackie Green</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Mack Bernard (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Senator, District 26</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/06/lauren-book-for-florida-senate-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Rick Roth</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>David Silvers</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Senator, District 30</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/06/lauren-book-for-florida-senate-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Broward, Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Hector Rivera</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Lauren Book</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="state-legislature-state-house" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">State House</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 86</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach, Martin</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>John Snyder (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Elizabeth Brendel Pandich</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 87</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/23/a-trio-for-the-state-house-in-palm-beach-county-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Jon Maples</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Emily Gregory (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 88</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>William Joseph</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Jervonte "Tae" Edmonds (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 89</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Cathy Higgins</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Debra Tendrich (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 90</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/23/a-trio-for-the-state-house-in-palm-beach-county-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Ionel Roiban</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Rob Long (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 91</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/01/keep-gossett-seidman-and-gerwig-in-house-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Peggy Gossett-Seidman (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Luis Garcia</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 92</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/23/a-trio-for-the-state-house-in-palm-beach-county-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Steve Byers</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Kelly Skidmore (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 93</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/10/01/keep-gossett-seidman-and-gerwig-in-house-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Anne Gerwig (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>August Mangeney</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">State Representative, District 94</h4>
+            <p style="font-size: 0.85em; font-weight: normal; color: #666; margin-top: -10px; margin-bottom: 15px;">Counties: Palm Beach</p>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Megan Weinberger (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Elizabeth Holmes</li>
+            </ul>
+            <div class="party-badge badge-non">Other / No Party Affiliation</div>
+            <ul class="candidate-list">
+                <li>Doug Barrow (NPA)</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h2 class="section-title">Palm Beach County Races</h2>
+        <h3 id="palm-beach-county-races-palm-beach-county" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Palm Beach County</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Clerk of the Circuit Court and Comptroller</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/16/drucker-for-palm-beach-clerk-for-obvious-reasons-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Mike Caruso</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Yvette Drucker</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Board of County Commissioners, District 4</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/27/woodward-and-waldron-for-palm-beach-commission-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Marci Woodward (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Curtis Calabrese</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Board of County Commissioners, District 6</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/27/woodward-and-waldron-for-palm-beach-commission-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Sara Baxter (i)</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Katherine Waldron</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-port-of-palm-beach" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Port of Palm Beach</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Port of Palm Beach, Group 5</h4>
+            <div class="party-badge badge-rep">Republican</div>
+            <ul class="candidate-list">
+                <li>Ted Sarandis</li>
+            </ul>
+            <div class="party-badge badge-dem">Democrat</div>
+            <ul class="candidate-list">
+                <li>Deandre Poole (i)</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-school-board" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">School Board</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">School Board, District 4</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/27/romelus-for-palm-beach-county-school-board-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Christina L. Romelus</li>
+                <li>Daniel Zapata</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-palm-beach-soil-and-water-conservation-district" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Palm Beach Soil and Water Conservation District</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Palm Beach Soil and Water Conservation District, Group 3</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Angelo Andrew</li>
+                <li>Douglas Brown</li>
+                <li>Lewis Pope</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-indian-trail-improvement-district" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Indian Trail Improvement District</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Indian Trail Improvement District, Seat 1</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Kirk Ljongquist</li>
+                <li>Jay Sweet</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Indian Trail Improvement District, Seat 3</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Jack Lloyd Bell II</li>
+                <li>Patricia "Patty" Farrell (i)</li>
+            </ul>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Indian Trail Improvement District, Seat 5</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Michael T. Johnson (i)</li>
+                <li>Christopher Karch</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-avenir-community-development-district" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Avenir Community Development District</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">Avenir Community Development District, Seat 2</h4>
+            <div class="party-badge badge-non">Nonpartisan</div>
+            <ul class="candidate-list">
+                <li>Bill Rosenberg</li>
+                <li>Luis A. Vinas</li>
+            </ul>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+        <h3 id="palm-beach-county-races-palm-beach-county" style="font-size: 1.15em; font-weight: 700; color: #222; margin: 30px 0 15px 5px; font-family: 'Noto Sans', sans-serif;">Palm Beach County</h3>
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">County Question - Parks</h4>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">PARKS, SPORTS, RECREATIONAL FACILITIES AND BOTANICAL GARDENS TO BE FINANCED BY GENERAL OBLIGATION BONDS</p>
+            <p style="margin: 0; color: #333;">Shall the County issue general obligation bonds in an amount not to exceed $280,000,000, bearing interest at rates not exceeding the legal limit and maturing not exceeding 20 years from the date(s) of issuance payable from ad valorem taxes levied on all taxable property within the County to modernize aging parks and recreation facilities and botanical gardens, expand and update sports complexes, increase public beach access and trail connectivity and develop new regional parks?</p>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">County Question - Library District</h4>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">LIBRARY DISTRICT EXPANSION AND MODERNIZATION PROGRAM TO BE FINANCED BY GENERAL OBLIGATION BONDS</p>
+            <p style="margin: 0; color: #333;">Shall Palm Beach County issue bonds in the aggregate amount not exceeding $175,000,000, bearing interest at rates not exceeding the legal limit and maturing not exceeding 20 years from the date(s) of issuance, payable from ad valorem taxes levied for such purposes within the Palm Beach County Library District for the purpose of providing funds to pay for the cost of acquisition, construction, reconstruction, expansion, improving and equipping Palm Beach County library facilities?</p>
+        </div>
+
+        <div class="race-container">
+            <h4 class="race-title" style="font-size: 1.25em;">County Question - School District</h4>
+            <div class="btn-group">
+                <a href="https://www.sun-sentinel.com/2026/09/25/re-approve-school-taxes-in-broward-and-palm-beach-counties-endorsement/" class="btn" target="_blank">Read Editorial Board Endorsement</a>
+            </div>
+            <p style="font-weight: 700; margin-bottom: 10px; color: #444;">REFERENDUM TO CONTINUE AD VALOREM LEVY FOR SCHOOL SAFETY, TEACHERS AND OPERATIONAL NEEDS</p>
+            <p style="margin: 0; color: #333;">Shall the School District of Palm Beach County have continued authority to levy 1.00 mills of ad valorem millage for operational needs of public schools dedicated to funding school safety; school police; mental health services; arts, music, physical education, career and choice program teachers; and improved teacher pay beginning July 1, 2027 and automatically ending June 30, 2031, with oversight of all funds by an independent committee of citizens and experts?</p>
+        </div>
+
+        <div class="back-to-top-container"><a href="#toc-container" class="back-to-top">↑ Back to top</a></div>
+    </div>
+</div>
+
+    <!-- Search Filtering Script -->
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toUpperCase();
+            let ballotContent = document.getElementById('ballot-content');
+            let children = ballotContent.children;
+            
+            let currentSectionTitle = null;
+            let currentCategoryTitle = null;
+            let visibleRacesInSection = 0;
+            let visibleRacesInCategory = 0;
+
+            for (let i = 0; i < children.length; i++) {
+                let child = children[i];
+                
+                if (child.classList.contains('section-title')) {
+                    if (currentSectionTitle !== null) {
+                        currentSectionTitle.style.display = (visibleRacesInSection > 0) ? "" : "none";
+                    }
+                    if (currentCategoryTitle !== null) {
+                        currentCategoryTitle.style.display = (visibleRacesInCategory > 0) ? "" : "none";
+                    }
+                    currentSectionTitle = child;
+                    currentCategoryTitle = null;
+                    visibleRacesInSection = 0; 
+                    visibleRacesInCategory = 0;
+                } 
+                else if (child.tagName === 'H3' && child.id.length > 0) {
+                    if (currentCategoryTitle !== null) {
+                        currentCategoryTitle.style.display = (visibleRacesInCategory > 0) ? "" : "none";
+                    }
+                    currentCategoryTitle = child;
+                    visibleRacesInCategory = 0;
+                }
+                else if (child.classList.contains('race-container')) {
+                    let text = child.innerText.toUpperCase();
+                    if (text.indexOf(filter) > -1) {
+                        child.style.display = "";
+                        visibleRacesInSection++;
+                        visibleRacesInCategory++;
+                    } else {
+                        child.style.display = "none";
+                    }
+                }
+                else if (child.classList.contains('back-to-top-container')) {
+                    child.style.display = (visibleRacesInCategory > 0) ? "" : "none";
+                }
+            }
+            
+            if (currentCategoryTitle !== null) currentCategoryTitle.style.display = (visibleRacesInCategory > 0) ? "" : "none";
+            if (currentSectionTitle !== null) currentSectionTitle.style.display = (visibleRacesInSection > 0) ? "" : "none";
+            
+            let tocContainer = document.getElementById('toc-container');
+            if (filter.length > 0) tocContainer.style.display = 'none';
+            else tocContainer.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
